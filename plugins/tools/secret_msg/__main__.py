@@ -125,15 +125,16 @@ async def inline_answer(_, inline_query: InlineQuery):
         return
 
     c_m_e = MEDIA_FID_S.get(msg[:-1])
-    if not c_m_e:
-        PRVT_MSGS[inline_query.id] = (user.id, user.first_name, msg.strip(': '))
-    else:
-        PRVT_MSGS[inline_query.id] = (user.id, user.first_name, c_m_e)
+    PRVT_MSGS[inline_query.id] = (
+        (user.id, user.first_name, c_m_e)
+        if c_m_e
+        else (user.id, user.first_name, msg.strip(': '))
+    )
 
     prvte_msg = [[InlineKeyboardButton(
         "Show Message 🔐", callback_data=f"prvtmsg({inline_query.id})")]]
 
-    msg_c = f"🔒 A **private message** to {'@' + user.username}, "
+    msg_c = f"🔒 A **private message** to {f'@{user.username}'}, "
     msg_c += "Only he/she can open it."
 
     results = [

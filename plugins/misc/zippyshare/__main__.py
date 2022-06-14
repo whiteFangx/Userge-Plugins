@@ -54,16 +54,16 @@ def _generate_zippylink(url):
     with session as ses:
         match = re.match(_REGEX_LINK, url)
         if not match:
-            raise ValueError("Invalid URL: " + str(url))
-        server, id_ = match.group(1), match.group(2)
+            raise ValueError(f"Invalid URL: {str(url)}")
+        server, id_ = match[1], match[2]
         res = ses.get(url)
         res.raise_for_status()
         match = re.search(_REGEX_RESULT, res.text, re.DOTALL)
         if not match:
             raise ValueError("Invalid Response!")
-        val_1 = int(match.group(1))
-        val_2 = int(match.group(2))
+        val_1 = int(match[1])
+        val_2 = int(match[2])
         val = val_1 % 51245 + val_2 % 913
-        name = match.group(3)
-        d_l = "https://www{}.zippyshare.com/d/{}/{}/{}".format(server, id_, val, name)
+        name = match[3]
+        d_l = f"https://www{server}.zippyshare.com/d/{id_}/{val}/{name}"
     return d_l, name
