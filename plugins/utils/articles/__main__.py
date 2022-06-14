@@ -32,7 +32,7 @@ async def con_(message: Message):
         await message.err("Input not found")
         return
     try:
-        url: str = re.search(regex, text).group(1)
+        url: str = re.search(regex, text)[1]
         article: Article = Article(url)
         article.download()
         article.parse()

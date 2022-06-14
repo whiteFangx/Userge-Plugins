@@ -49,10 +49,7 @@ async def _info(msg: Message):
         return
     await msg.edit("`Getting Info...`")
     l_name = user.last_name or ''
-    if user.username:
-        username = '@' + user.username
-    else:
-        username = '`None`'
+    username = f'@{user.username}' if user.username else '`None`'
     common_chats = await msg.client.get_common_chats(user.id)
     user_info = f"""
 **About [{user.first_name} {l_name}](tg://user?id={user.id})**:
@@ -110,9 +107,7 @@ async def _info(msg: Message):
 
 
 def reduce_spam(text: Optional[str]) -> Optional[str]:
-    if text and len(text) > 100:
-        return text[:97] + "..."
-    return text
+    return f"{text[:97]}..." if text and len(text) > 100 else text
 
 
 def last_online(user):

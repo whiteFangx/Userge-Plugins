@@ -37,8 +37,7 @@ async def nightmode_handler(msg: Message):
     chat_id = msg.chat.id
 
     if "-d" in flags:
-        job = scheduler.get_job(job_id=f"enable_nightmode_{chat_id}")
-        if job:
+        if job := scheduler.get_job(job_id=f"enable_nightmode_{chat_id}"):
             scheduler.remove_job(job_id=f"enable_nightmode_{chat_id}")
             scheduler.remove_job(job_id=f"disable_nightmode_{chat_id}")
             if not bool(scheduler.get_jobs()) and bool(scheduler.state):

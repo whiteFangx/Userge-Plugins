@@ -212,9 +212,9 @@ def _tubeDl(url: list, prog, starttime, uid=None, merge_output_format=None):
              'postprocessors': [
                  {'key': 'FFmpegMetadata'}]}
     if merge_output_format and merge_output_format in ('mkv', 'mp4', 'ogg', 'webm', 'flv'):
-        _opts.update({'merge_output_format': merge_output_format})
-    _quality = {'format': 'bestvideo+bestaudio/best' if not uid else str(uid)}
-    _opts.update(_quality)
+        _opts['merge_output_format'] = merge_output_format
+    _quality = {'format': str(uid) if uid else 'bestvideo+bestaudio/best'}
+    _opts |= _quality
     try:
         x = ytdl.YoutubeDL(_opts)
         x.add_progress_hook(prog)

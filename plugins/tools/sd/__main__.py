@@ -30,9 +30,8 @@ async def selfdestruct(message: Message):
     if message.client.is_bot:
         if message.chat.type == "private":
             return await message.edit(text=text, del_in=seconds)
-    else:
-        if message.chat.type == "bot" or message.chat.id == message.from_user.id:
-            return await message.edit(text=text, del_in=seconds)
+    elif message.chat.type == "bot" or message.chat.id == message.from_user.id:
+        return await message.edit(text=text, del_in=seconds)
     msg = await message.edit(text=text)
 
     MSGS[msg.chat.id] = MSGS.get(msg.chat.id, []) + \
@@ -44,8 +43,7 @@ async def raw_handler(_, update: Update, *__):
     if isinstance(update, (UpdateReadChannelOutbox, UpdateReadHistoryOutbox)):
         chat_id = get_chat_id(getattr(update, 'peer', None)) or int(
             '-100' + str(getattr(update, 'channel_id', 0)))
-        msgs = MSGS.get(chat_id)
-        if msgs:
+        if msgs := MSGS.get(chat_id):
             MSGS[chat_id] = []  # clear the fetched list
             msg_ids = list(
                 filter(
@@ -71,9 +69,8 @@ def get_chat_id(peer: Peer) -> int:
     if not peer:
         return None
     if isinstance(peer, PeerChannel):
-        chat_id = int('-100' + str(peer.channel_id))
+        return int(f'-100{str(peer.channel_id)}')
     elif isinstance(peer, PeerUser):
-        chat_id = peer.user_id
+        return peer.user_id
     else:
-        chat_id = peer.chat_id
-    return chat_id
+        return peer.chat_id

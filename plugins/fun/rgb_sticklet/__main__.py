@@ -108,8 +108,7 @@ async def get_font_file(message):
     if message.client.is_bot:
         font_file_message_s = await message.client.get_messages(
             FONTS_FILE_CHANNEL, DEFAULT_FONTS)
-        font_file_message = random.choice(font_file_message_s)
     else:
         font_file_message_s = await message.client.get_history(FONTS_FILE_CHANNEL)
-        font_file_message = random.choice(font_file_message_s)
+    font_file_message = random.choice(font_file_message_s)
     return await font_file_message.download()

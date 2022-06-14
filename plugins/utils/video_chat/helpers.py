@@ -161,11 +161,10 @@ async def skip_song(clear_queue: bool = False):
         await call.change_stream(
             Vars.CHAT_ID,
             AudioPiped(
-                "http://duramecho.com/Misc/SilentCd/Silence{}s.mp3".format(
-                    '01' if not QUEUE or clear_queue else '32'
-                )
-            )
+                f"http://duramecho.com/Misc/SilentCd/Silence{'01' if not QUEUE or clear_queue else '32'}s.mp3"
+            ),
         )
+
 
     if CQ_MSG:
         for msg in CQ_MSG:
@@ -276,10 +275,12 @@ async def url_down(resource: UrlResource):
     msg = resource.message
     duration = resource.duration
     quality = max(min(100, int(resource.quality)), 1)
-    if resource.file_info:
-        height, width, has_audio, has_video = resource.file_info
-    else:
-        height, width, has_audio, has_video = await get_file_info(stream_link)
+    (
+        height,
+        width,
+        has_audio,
+        has_video,
+    ) = resource.file_info or await get_file_info(stream_link)
 
     CURRENT_SONG.update({
         'file': stream_link,
@@ -305,10 +306,8 @@ async def url_down(resource: UrlResource):
 
     await message.delete()
 
-    Vars.BACK_BUTTON_TEXT = (
-        f"🎶 **Now playing:** [{resource}]({resource.url})\n"
-        f"⏳ **Duration:** `{'Live' if not duration else time_formatter(duration)}`\n"
-        f"🎧 **Requested By:** {requester(msg)}")
+    Vars.BACK_BUTTON_TEXT = f"🎶 **Now playing:** [{resource}]({resource.url})\n⏳ **Duration:** `{time_formatter(duration) if duration else 'Live'}`\n🎧 **Requested By:** {requester(msg)}"
+
 
     raw_msg = await reply_text(
         msg,
@@ -376,10 +375,8 @@ async def tg_down(resource: TgResource):
     await message.delete()
     d = resource.duration
 
-    Vars.BACK_BUTTON_TEXT = (
-        f"🎶 **Now playing:** [{resource}]({msg.link})\n"
-        f"⏳ **Duration:** `{'Live' if not d else time_formatter(d)}`\n"
-        f"🎧 **Requested By:** {requester(msg)}")
+    Vars.BACK_BUTTON_TEXT = f"🎶 **Now playing:** [{resource}]({msg.link})\n⏳ **Duration:** `{time_formatter(d) if d else 'Live'}`\n🎧 **Requested By:** {requester(msg)}"
+
 
     raw_msg = await reply_text(
         msg,

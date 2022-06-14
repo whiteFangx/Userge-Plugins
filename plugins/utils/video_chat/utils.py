@@ -184,7 +184,7 @@ def get_song_info(url: str) -> Tuple[str, int]:
 
         if duration > MAX_DURATION:
             duration = -1
-    return info.get("title"), duration if duration else 0
+    return info.get("title"), duration or 0
 
 
 async def get_stream_link(link: str) -> str:
@@ -206,8 +206,7 @@ async def get_duration(file: str) -> int:
     except JSONDecodeError:
         return 0
 
-    dur = int(float((out.get("format", {})).get("duration", 0)))
-    return dur
+    return int(float((out.get("format", {})).get("duration", 0)))
 
 
 async def get_file_info(file) -> Tuple[int, int, bool, bool]:
@@ -235,15 +234,11 @@ async def get_file_info(file) -> Tuple[int, int, bool, bool]:
 
 def requester(msg: Message):
     if not msg.from_user:
-        if msg.sender_chat:
-            return msg.sender_chat.title
-        return None
+        return msg.sender_chat.title if msg.sender_chat else None
     replied = msg.reply_to_message
     if replied and msg.client.id == msg.from_user.id:
         if not replied.from_user:
-            if replied.sender_chat:
-                return replied.sender_chat.title
-            return None
+            return replied.sender_chat.title if replied.sender_chat else None
         return replied.from_user.mention
     return msg.from_user.mention
 

@@ -1,5 +1,6 @@
 """ setup AFK mode """
 
+
 # Copyright (C) 2020-2022 by UsergeTeam@Github, < https://github.com/UsergeTeam >.
 #
 # This file is part of < https://github.com/UsergeTeam/Userge > project,
@@ -22,7 +23,7 @@ SAVED_SETTINGS = get_collection("CONFIGS")
 AFK_COLLECTION = get_collection("AFK")
 
 IS_AFK = False
-IS_AFK_FILTER = filters.create(lambda _, __, ___: bool(IS_AFK))
+IS_AFK_FILTER = filters.create(lambda _, __, ___: IS_AFK)
 AFK_INCOMING_FILTER = (
     IS_AFK_FILTER & ~filters.me & ~filters.bot & ~filters.edited & ~filters.service)
 if pmpermit is not None:

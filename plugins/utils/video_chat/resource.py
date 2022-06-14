@@ -29,9 +29,7 @@ class TgResource:
         return cls(message, name, duration, path, quality, is_video)
 
     def __repr__(self) -> str:
-        return "<{} name={} duration={}>".format(self.__class__.__name__,
-                                                 self.name,
-                                                 self.duration)
+        return f"<{self.__class__.__name__} name={self.name} duration={self.duration}>"
 
     def __str__(self) -> str:
         return self.name
@@ -66,9 +64,7 @@ class UrlResource:
         return cls(message, name, url, duration, quality, is_video, file_info)
 
     def __repr__(self) -> str:
-        return "<{} name={} duration={}>".format(self.__class__.__name__,
-                                                 self.name,
-                                                 self.duration)
+        return f"<{self.__class__.__name__} name={self.name} duration={self.duration}>"
 
     def __str__(self) -> str:
         return self.name
