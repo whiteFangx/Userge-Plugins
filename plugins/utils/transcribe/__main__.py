@@ -36,7 +36,7 @@ class WitAiAPI:
     def __init__(self, lang):
         self.api_keys = {}
         for i in filter(lambda x: x.startswith('WIT_AI_API_'), os.environ):
-            self.api_keys.update({i.split('WIT_AI_API_')[1].lower(): os.environ.get(i)})
+            self.api_keys[i.split('WIT_AI_API_')[1].lower()] = os.environ.get(i)
         self.api_url = "https://api.wit.ai"
         self.lang = lang
         self.chunks = None
@@ -122,7 +122,7 @@ class WitAiAPI:
 }, check_downpath=True, del_pre=True)
 async def stt_(message: Message):
     """ Speech to text using Wit.ai """
-    send_text = bool('t' in message.flags)
+    send_text = 't' in message.flags
     replied = message.reply_to_message
     message_id = replied.id if replied else message.id
     regex = re.compile(r'([\S]*)(?: |)([\s\S]*)')
@@ -130,7 +130,7 @@ async def stt_(message: Message):
     if not match:
         await message.edit("`Please read .help stt`")
         return
-    lang = match.group(1).lower()
+    lang = match[1].lower()
     api = WitAiAPI(lang)
     if not api.has_api_key():
         await message.edit(f'`Please set WIT_AI_API_{lang.upper()} variable first!`')
@@ -159,9 +159,8 @@ async def stt_(message: Message):
             await message.err(e_e)
             return
     else:
-        input_str = match.group(2) if match.group(2) else ""
-        is_input_url = is_url(input_str)
-        if is_input_url:
+        input_str = match[2] if match[2] else ""
+        if is_input_url := is_url(input_str):
             try:
                 dl_loc, _ = await url_download(message, message.filtered_input_str)
                 file_name = os.path.basename(dl_loc)

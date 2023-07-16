@@ -8,6 +8,7 @@
 
 """ manage video chats """
 
+
 import os
 import logging
 from typing import List, Union
@@ -24,9 +25,7 @@ logging.getLogger("pytgcalls").setLevel(logging.WARNING)
 
 YTDL_PATH = os.environ.get("YOUTUBE_DL_PATH", "yt_dlp")
 MAX_DURATION = int(os.environ.get("MAX_DURATION", 900))
-VC_SESSION = secured_env("VC_SESSION_STRING")
-
-if VC_SESSION:
+if VC_SESSION := secured_env("VC_SESSION_STRING"):
     VC_CLIENT = Client(
         "usergeMusic",
         config.API_ID,

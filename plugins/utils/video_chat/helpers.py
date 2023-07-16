@@ -161,10 +161,8 @@ async def skip_song(clear_queue: bool = False):
         await call.change_stream(
             Vars.CHAT_ID,
             AudioPiped(
-                "http://duramecho.com/Misc/SilentCd/Silence{}s.mp3".format(
-                    '01' if not QUEUE or clear_queue else '32'
-                )
-            )
+                f"http://duramecho.com/Misc/SilentCd/Silence{'01' if not QUEUE or clear_queue else '32'}s.mp3"
+            ),
         )
 
     if CQ_MSG:

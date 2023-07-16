@@ -53,10 +53,9 @@ async def autofastly(msg: Message):
     await USER_DATA.update_one({'_id': 'AUTO_FASTLY'},
                                {"$set": {'on': IS_ENABLED}}, upsert=True)
     await msg.edit(
-        "Auto Fastly Response has been **{}** Successfully...".format(
-            "Enabled" if IS_ENABLED else "Disabled"
-        ),
-        log=True, del_in=5
+        f'Auto Fastly Response has been **{"Enabled" if IS_ENABLED else "Disabled"}** Successfully...',
+        log=True,
+        del_in=5,
     )
 
 
@@ -68,8 +67,12 @@ async def fastly_handler(msg: Message):
     parse = await ocr.ocr_space_file(img)
     try:
         text = parse["ParsedResults"][0]["ParsedText"]
-        text = text.split("By@")[0].replace("\n", "").replace("\r", "").replace(" ", "")
-        if text:
+        if (
+            text := text.split("By@")[0]
+            .replace("\n", "")
+            .replace("\r", "")
+            .replace(" ", "")
+        ):
             await msg.reply_text(text.capitalize())
             await CHANNEL.log(f'Auto Fastly Responded in {msg.chat.title} [{msg.chat.id}]')
         os.remove(img)

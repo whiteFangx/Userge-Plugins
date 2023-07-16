@@ -35,10 +35,7 @@ async def _init():
 async def toggle_mentions(msg: Message):
     """ toggle mentions """
     global TOGGLE  # pylint: disable=global-statement
-    if TOGGLE:
-        TOGGLE = False
-    else:
-        TOGGLE = True
+    TOGGLE = not TOGGLE
     await SAVED_SETTINGS.update_one(
         {"_id": "MENTION_TOGGLE"}, {"$set": {"data": TOGGLE}}, upsert=True
     )
@@ -117,13 +114,12 @@ async def handle_mentions(msg: Message, is_retry=False):
             reply_markup=InlineKeyboardMarkup(buttons)
         )
     except (PeerIdInvalid, UserIsBlocked) as e:
-        if userge.dual_mode and not is_retry:
-            if isinstance(e, UserIsBlocked):
-                await userge.unblock_user(userge.bot.id)
-            await userge.send_message(userge.bot.id, "/start")
-            await handle_mentions(msg, True)
-        else:
+        if not userge.dual_mode or is_retry:
             raise
+        if isinstance(e, UserIsBlocked):
+            await userge.unblock_user(userge.bot.id)
+        await userge.send_message(userge.bot.id, "/start")
+        await handle_mentions(msg, True)
     finally:
         if dl_loc and os.path.exists(dl_loc):
             os.remove(dl_loc)

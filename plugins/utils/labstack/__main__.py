@@ -36,11 +36,9 @@ async def labstack(message: Message):
     if not os.path.isdir(config.Dynamic.DOWN_PATH):
         os.mkdir(config.Dynamic.DOWN_PATH)
 
-    path_ = message.filtered_input_str
     dl_loc = ""
-    if path_:
-        is_url = re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_)
-        if is_url:
+    if path_ := message.filtered_input_str:
+        if is_url := re.search(r"(?:https?|ftp)://[^|\s]+\.[^|\s]+", path_):
             await message.edit("`Downloading From URL...`")
             if not os.path.isdir(config.Dynamic.DOWN_PATH):
                 os.mkdir(config.Dynamic.DOWN_PATH)

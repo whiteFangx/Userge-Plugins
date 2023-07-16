@@ -33,8 +33,7 @@ async def app(message: Message):
                 f"https://play.google.com/store/search?q={app_name}&c=apps") as res:
             result = bs4.BeautifulSoup(await res.text(), "lxml")
 
-        found = result.find("div", class_="vWM94c")
-        if found:
+        if found := result.find("div", class_="vWM94c"):
             app_name = found.text
             app_dev = result.find("div", class_="LbQbAe").text
             app_rating = result.find("div", class_="TT9eCd").text.replace("star", "")
@@ -51,7 +50,7 @@ async def app(message: Message):
             "https://play.google.com/store/apps/developer?id="
             + app_dev.replace(" ", "+")
         )
-        app_link = "https://play.google.com" + _app_link
+        app_link = f"https://play.google.com{_app_link}"
 
         app_details = f"[📲]({app_icon}) **{app_name}**\n\n"
         app_details += f"`Developer :` [{app_dev}]({app_dev_link})\n"

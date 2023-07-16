@@ -40,9 +40,13 @@ async def sangmata_(message: Message):
             except YouBlockedUser:
                 await message.err(f"**{ERROR_MSG}**", del_in=5)
                 return
-            msgs.append(await conv.get_response(mark_read=True))
-            msgs.append(await conv.get_response(mark_read=True))
-            msgs.append(await conv.get_response(timeout=3, mark_read=True))
+            msgs.extend(
+                (
+                    await conv.get_response(mark_read=True),
+                    await conv.get_response(mark_read=True),
+                    await conv.get_response(timeout=3, mark_read=True),
+                )
+            )
     except StopConversation:
         pass
     name = "Name History"

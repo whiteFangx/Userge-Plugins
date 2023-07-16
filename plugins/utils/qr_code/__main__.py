@@ -25,8 +25,7 @@ from userge import userge, config, Message
 async def make_qr(message: Message):
     """ Make Qr code """
     replied = message.reply_to_message
-    input_ = message.input_str
-    if input_:
+    if input_ := message.input_str:
         text = input_
     elif replied:
         text = input_ if input_ else replied.text
@@ -72,9 +71,11 @@ async def get_qr(message: Message):
     await message.edit("```\nProcessing your QR Code...```")
     cmd = [
         "curl",
-        "-X", "POST",
-        "-F", "f=@" + down_load + "",
-        "https://zxing.org/w/decode"
+        "-X",
+        "POST",
+        "-F",
+        f"f=@{down_load}",
+        "https://zxing.org/w/decode",
     ]
     process = await asyncio.create_subprocess_exec(
         *cmd,

@@ -112,11 +112,7 @@ def _get_msg_and_log(chat: Chat, user: User, reason: str, fed: Optional[str]) ->
         "**Quick Action:** Banned"
     )
 
-    msg = (
-        r"\\**#Userge_Antispam**//"
-        "\n\nGlobally Banned User Detected in this Chat.\n\n"
-        f"{others.replace(':reason:', reason[:97] + '...' if len(reason) > 97 else reason)}"
-    )
+    msg = f"\**#Userge_Antispam**//\n\nGlobally Banned User Detected in this Chat.\n\n{others.replace(':reason:', f'{reason[:97]}...' if len(reason) > 97 else reason)}"
 
     log = (
         r"\\**#Antispam_Log**//"

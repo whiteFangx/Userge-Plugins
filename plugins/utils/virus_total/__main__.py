@@ -87,7 +87,7 @@ async def _scan_file(msg: Message):
         if report[i]['detected'] is True:
             viruslist.append(i)
             reasons.append('â¤ ' + report[i]['result'])
-    if len(viruslist) > 0:
+    if viruslist:
         names = ' , '.join(viruslist)
         reason = '\n'.join(reasons)
         await msg.edit(f"""

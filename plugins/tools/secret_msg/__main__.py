@@ -117,7 +117,7 @@ async def inline_answer(_, inline_query: InlineQuery):
     _id = data[0].strip()
     msg = data[1].strip()
 
-    if not (msg and msg.endswith(':')):
+    if not msg or not msg.endswith(':'):
         inline_query.stop_propagation()
 
     try:
@@ -126,16 +126,15 @@ async def inline_answer(_, inline_query: InlineQuery):
         inline_query.stop_propagation()
         return
 
-    c_m_e = MEDIA_FID_S.get(msg[:-1])
-    if not c_m_e:
-        PRVT_MSGS[inline_query.id] = (user.id, user.first_name, msg.strip(': '))
-    else:
+    if c_m_e := MEDIA_FID_S.get(msg[:-1]):
         PRVT_MSGS[inline_query.id] = (user.id, user.first_name, c_m_e)
 
+    else:
+        PRVT_MSGS[inline_query.id] = (user.id, user.first_name, msg.strip(': '))
     prvte_msg = [[InlineKeyboardButton(
         "Show Message 🔐", callback_data=f"prvtmsg({inline_query.id})")]]
 
-    msg_c = f"🔒 A **private message** to {'@' + user.username}, "
+    msg_c = f"🔒 A **private message** to {f'@{user.username}'}, "
     msg_c += "Only he/she can open it."
 
     results = [

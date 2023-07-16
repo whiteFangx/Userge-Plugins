@@ -169,8 +169,7 @@ def get_player_string() -> str:
 
 @pool.run_in_thread
 def get_song(name: str) -> Tuple[str, str]:
-    results: List[dict] = VideosSearch(name, limit=1).result()['result']
-    if results:
+    if results := VideosSearch(name, limit=1).result()['result']:
         return results[0].get('title', name), results[0].get('link')
     return name, ""
 
@@ -207,8 +206,7 @@ async def get_duration(file: str) -> int:
     except JSONDecodeError:
         return 0
 
-    dur = int(float((out.get("format", {})).get("duration", 0)))
-    return dur
+    return int(float((out.get("format", {})).get("duration", 0)))
 
 
 async def get_file_info(file) -> Tuple[int, int, bool, bool]:
@@ -236,15 +234,11 @@ async def get_file_info(file) -> Tuple[int, int, bool, bool]:
 
 def requester(msg: Message):
     if not msg.from_user:
-        if msg.sender_chat:
-            return msg.sender_chat.title
-        return None
+        return msg.sender_chat.title if msg.sender_chat else None
     replied = msg.reply_to_message
     if replied and msg.client.id == msg.from_user.id:
         if not replied.from_user:
-            if replied.sender_chat:
-                return replied.sender_chat.title
-            return None
+            return replied.sender_chat.title if replied.sender_chat else None
         return replied.from_user.mention
     return msg.from_user.mention
 
